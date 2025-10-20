@@ -15,7 +15,7 @@
     </div>
 
     <table id="dg" title="Product List" class="easyui-datagrid" style="width:100%;height:400px"
-        url="{{ route('products.index') }}"   {{-- ✅ use resource route --}}
+        url="{{ route('products.index') }}"  
         method="get"
         toolbar="#toolbar" pagination="true"
         rownumbers="true" fitColumns="true" singleSelect="true">
