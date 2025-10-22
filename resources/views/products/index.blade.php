@@ -56,69 +56,75 @@
 <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
 
 <script type="text/javascript">
-    var url;
+var url;
 
-    function newProduct() {
-        $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'New Product');
-        $('#fm').form('clear');
-        url = "{{ route('products.store') }}";
+function newProduct() {
+    $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'New Product');
+    $('#fm').form('clear');
+    url = "{{ route('products.store') }}";
+}
+
+function editProduct() {
+    var row = $('#dg').datagrid('getSelected');
+    if (row) {
+        $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Edit Product');
+        $('#fm').form('load', row);
+        url = "/products/" + row.id; 
+    } else {
+        $.messager.alert('Warning', 'Please select a product first!');
     }
+}
 
-    function editProduct() {
-        var row = $('#dg').datagrid('getSelected');
-        if (row) {
-            $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Edit Product');
-            $('#fm').form('load', row);
-            url = "/products/" + row.id; 
-        } else {
-            $.messager.alert('Warning', 'Please select a product first!');
+function saveProduct() {
+    var row = $('#dg').datagrid('getSelected');
+    var formData = $('#fm').serializeArray(); 
+    var method = url.includes('/products/') ? 'PUT' : 'POST';
+
+    var data = {};
+    $.map(formData, function(n, i){
+        data[n['name']] = n['value'];
+    });
+
+    $.ajax({
+        url: url,
+        type: method,   
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+        data: data,
+        success: function (result) {
+            $('#dlg').dialog('close'); 
+            $('#dg').datagrid('reload'); 
+            $.messager.show({ title: 'Success', msg: result.message || 'Product saved successfully!' });
+        },
+        error: function (xhr) {
+            let msg = xhr.responseJSON?.message || 'Failed to save product.';
+            $.messager.alert('Error', msg);
         }
-    }
+    });
+}
 
-    function saveProduct() {
-        var row = $('#dg').datagrid('getSelected');
-        var formData = $('#fm').serialize();
-
-        var method = url.includes('/products/') ? 'PUT' : 'POST';
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: formData + '&_method=' + method + '&_token={{ csrf_token() }}',
-            success: function (result) {
-                $('#dlg').dialog('close'); 
-                $('#dg').datagrid('reload'); 
-                $.messager.show({ title: 'Success', msg: result.message || 'Product saved successfully!' });
-            },
-            error: function (xhr) {
-                let msg = xhr.responseJSON?.message || 'Failed to save product.';
-                $.messager.alert('Error', msg);
+function destroyProduct() {
+    var row = $('#dg').datagrid('getSelected');
+    if (row) {
+        $.messager.confirm('Confirm', 'Are you sure you want to delete this product?', function (r) {
+            if (r) {
+                $.ajax({
+                    url: "/products/" + row.id,
+                    type: 'DELETE',   
+                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                    success: function (result) {
+                        $('#dg').datagrid('reload');
+                        $.messager.show({ title: 'Success', msg: result.message || 'Product deleted successfully!' });
+                    },
+                    error: function () {
+                        $.messager.alert('Error', 'Failed to delete product.');
+                    }
+                });
             }
         });
+    } else {
+        $.messager.alert('Warning', 'Please select a product first!');
     }
-
-    function destroyProduct() {
-        var row = $('#dg').datagrid('getSelected');
-        if (row) {
-            $.messager.confirm('Confirm', 'Are you sure you want to delete this product?', function (r) {
-                if (r) {
-                    $.ajax({
-                        url: "/products/" + row.id,
-                        type: "POST", 
-                        data: { _method: 'DELETE', _token: "{{ csrf_token() }}" },
-                        success: function (result) {
-                            $('#dg').datagrid('reload');
-                            $.messager.show({ title: 'Success', msg: result.message || 'Product deleted successfully!' });
-                        },
-                        error: function () {
-                            $.messager.alert('Error', 'Failed to delete product.');
-                        }
-                    });
-                }
-            });
-        } else {
-            $.messager.alert('Warning', 'Please select a product first!');
-        }
-    }
+}
 </script>
+
 @endsection
