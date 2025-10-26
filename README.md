@@ -15,7 +15,6 @@ This version is used **for educational purposes only** (non-commercial).
 **26 October 2025**
 - Added **Authentication system**: Login, Logout, Register.
 - Added **Dashboard** page after login.
-- General code cleanup and documentation fixes.
 
 ---
 
