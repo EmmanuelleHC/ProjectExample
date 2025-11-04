@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name', 'detail', 'price', 'stock', 'image', 'is_active'];
 
-    protected $fillable = [
-        'name', 'detail'
-    ];
-    
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function transactionItems()
+    {
+        return $this->hasMany(TransactionItem::class);
+    }
 }

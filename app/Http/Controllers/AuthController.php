@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Product;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,13 +74,15 @@ class AuthController extends Controller
      * Dashboard page.
      */
     public function dashboard()
-{
-    if (Auth::check()) {
-        return view('dashboard');
+    {
+        if (Auth::check()) {
+            $products = Product::where('stock', '>', 0)->get();
+    
+            return view('dashboard', compact('products'));
+        }
+    
+        return redirect()->route('login')->with('error', 'Oops! You do not have access.');
     }
-
-    return redirect()->route('login')->with('error', 'Oops! You do not have access.');
-}
 
 
     /**

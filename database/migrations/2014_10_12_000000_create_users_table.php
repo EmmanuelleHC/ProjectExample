@@ -29,8 +29,11 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('users');
-    }
+    public function down(): void
+{
+    Schema::disableForeignKeyConstraints();
+    Schema::dropIfExists('users');
+    Schema::enableForeignKeyConstraints();
+}
+
 };

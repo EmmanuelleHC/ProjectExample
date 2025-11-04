@@ -6,17 +6,20 @@
     <title>@yield('title', 'My App')</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
     <style>
       body { overflow-x: hidden; }
       .offcanvas-end { width: 260px; }
+      .navbar-brand img { max-height: 50px; }
     </style>
   </head>
 <body>
 
+  <!-- Header -->
   <header class="border-bottom py-3 mb-4">
     <div class="container d-flex justify-content-between align-items-center">
-      <a href="/" class="text-dark text-decoration-none">
-        <img src="{{ asset('images/logo_toko.jpg') }}" alt="Toko Kelontong" width="100">
+      <a href="/" class="text-dark text-decoration-none navbar-brand">
+        <img src="{{ asset('images/logo_toko.jpg') }}" alt="Toko Kelontong">
       </a>
 
       <div class="d-flex align-items-center gap-3">
@@ -30,7 +33,8 @@
     </div>
   </header>
 
-  <div class="container">
+  <!-- Main Content -->
+  <div class="container mb-4">
       @yield('content')
   </div>
 
@@ -49,12 +53,19 @@
           <a href="{{ route('products.index') }}" class="text-decoration-none">📦 Products</a>
         </li>
         <li class="list-group-item">
+          <a href="{{ route('cart.index') }}" class="text-decoration-none">🛒 Cart</a>
+        </li>
+        <li class="list-group-item">
+          <a href="{{ route('transactions.index') }}" class="text-decoration-none">🧾 Orders</a>
+        </li>
+        <li class="list-group-item">
           <a href="#" class="text-decoration-none">👤 Profile</a>
         </li>
       </ul>
     </div>
   </div>
 
+  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
