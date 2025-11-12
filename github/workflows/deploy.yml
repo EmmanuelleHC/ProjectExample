@@ -1,50 +1,43 @@
-name: Deploy Laravel to DOM Cloud
-
-on:
+name: Sync on DOM Cloud
+'on':
+  workflow_dispatch: {}
   push:
     branches:
-      - main  
+      - main
+      - master
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # --- Step 1: Checkout repo dari GitHub ---
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # --- Step 2: Setup PHP environment ---
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, bcmath, pdo_mysql, intl
-
-      # --- Step 3: Install composer dependencies ---
-      - name: Install dependencies
-        run: composer install --no-dev --optimize-autoloader
-
-      # --- Step 4: Upload semua file ke server DOM Cloud ---
-      - name: Upload project to DOM Cloud
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DOMCLOUD_HOST }}
-          username: ${{ secrets.DOMCLOUD_USER }}
-          key: ${{ secrets.DOMCLOUD_SSH_KEY }}
-          source: "./"
-          target: "/home/${{ secrets.DOMCLOUD_USER }}/"
-
-      # --- Step 5: Jalankan perintah Laravel di server ---
-      - name: Run Laravel setup commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DOMCLOUD_HOST }}
-          username: ${{ secrets.DOMCLOUD_USER }}
-          key: ${{ secrets.DOMCLOUD_SSH_KEY }}
-          script: |
-            cd /home/${{ secrets.DOMCLOUD_USER }}
-            composer install --no-dev --optimize-autoloader
-            php artisan migrate --force
-            php artisan optimize
-            php artisan config:cache
-            php artisan route:cache
+      - name: Invoke deployment hook
+        uses: distributhor/workflow-webhook@v3
+        env:
+          webhook_url: https://my.domcloud.co/api/githubdeploy
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+          webhook_auth: ${{ secrets.WEBHOOK_AUTH }}
+          data: >-
+            {"source":"clear","root":"public_html/public","features":["php
+            latest","mysql"],"nginx":{"fastcgi":"on","locations":[{"match":"/","try_files":"$uri
+            $uri/ /index.php$is_args$args"},{"match":"~
+            \\.[^\\/]+(?<!\\.php)$","try_files":"$uri
+            =404"}]},"commands":["composer create-project laravel/laravel .","cp
+            .env.example .env","sed -ri \"s/(#
+            )?DB_CONNECTION=.*/DB_CONNECTION=mysql/g\" .env","sed -ri \"s/(#
+            )?DB_HOST=.*/DB_HOST=localhost/g\" .env","sed -ri \"s/(#
+            )?DB_PORT=.*/DB_PORT=3306/g\" .env","sed -ri \"s/(#
+            )?DB_DATABASE=.*/DB_DATABASE=${DATABASE}/g\" .env","sed -ri \"s/(#
+            )?DB_USERNAME=.*/DB_USERNAME=${USERNAME}/g\" .env","sed -ri \"s/(#
+            )?DB_PASSWORD=.*/DB_PASSWORD=${MYPASSWD}/g\" .env","sed -ri
+            \"s/APP_URL=.*/APP_URL=https:\\/\\/${DOMAIN}/g\" .env","sed -ri
+            \"s/LOG_STACK=single/LOG_STACK=daily,errorlog/g\" .env","php artisan
+            migrate:fresh --seed","php artisan key:generate","php artisan
+            storage:link","npm install","npm run build","chmod 0750 -R storage
+            || true","echo \"opcache.revalidate_freq = 0\" >>
+            public_html/.user.ini"],"wait":1}
+          verbose: true
+      - name: Check deployment status
+        uses: distributhor/workflow-webhook@v3
+        env:
+          webhook_url: https://my.domcloud.co/api/githubdeploycheck
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+          webhook_auth: ${{ secrets.WEBHOOK_AUTH }}
