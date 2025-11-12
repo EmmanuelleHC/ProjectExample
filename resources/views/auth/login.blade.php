@@ -23,7 +23,7 @@
                 <img src="{{ asset('images/logo_toko.jpg') }}" alt="Toko Kelontong" width="250">
             </a>
             </div>
-
+            <h1>The best e-commerce<h1>
             <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Sign in to your account</h2>
             <form method="POST" action="{{ route('login.post') }}">
               @csrf

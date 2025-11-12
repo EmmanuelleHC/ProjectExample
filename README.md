@@ -1,30 +1,44 @@
+Absolutely 👍 — your README already looks good and informative!
+Here’s a cleaned-up, professional version with better formatting, grammar, and Markdown structure (keeping your original meaning and timeline intact):
+
+---
+
 # Laravel 9 CRUD (Modified for Learning Purposes)
 
-This project is **based on** the original repository by [savanihd](https://github.com/savanihd/Laravel-9-CRUD).  
-All rights to the original source belong to the author.  
-This version is used **for educational purposes only** (non-commercial).
+This project is based on the original repository by [savanihd](https://github.com/savanihd/Laravel-9-CRUD).
+All rights to the original source belong to the author.
+This version has been modified for educational and non-commercial purposes only.
 
 ---
 
-## 🛠️ Modifications
+## 🛠️ Modifications Timeline
 
-**13 October 2025**  
-- Integrated **jQuery EasyUI** for front-end UI.  
-- Added **AJAX-based CRUD** implementation with Laravel backend.
+### 13 October 2025
 
-**26 October 2025**  
-- Added **Authentication system**: Login, Logout, Register.  
-- Added **Dashboard** page after login.
+* Integrated jQuery EasyUI for the front-end interface.
+* Implemented AJAX-based CRUD operations with a Laravel backend.
 
-**4 November 2025**  
-- Added **Cart functionality**.  
-- Modified **Product CRUD** to support cart features.  
-- Implemented **Payment methods using Stripe**.  
-  - For more details, refer to [Laravel Billing Documentation](https://laravel.com/docs/11.x/billing).
+### 26 October 2025
 
----
+* Added authentication system: Login, Logout, and Register.
+* Introduced a Dashboard page accessible after user login.
+
+### 4 November 2025
+
+* Added Cart functionality.
+* Enhanced Product CRUD to support cart management.
+* Integrated payment processing using Stripe.
+
+  * For more details, see the [Laravel Billing Documentation](https://laravel.com/docs/11.x/billing).
+
+### 12 November 2025
+
+* Added GitHub Actions for CI/CD automation.
+* Configured deployment to a free domain (DOM Cloud).
+
+
 
 ## ⚠️ Disclaimer
 
-This modified version is shared only for **learning and personal study**.  
-Please refer to the [original repository](https://github.com/savanihd/Laravel-9-CRUD) for the full original work.
+This modified version is provided solely for learning and personal study.
+Please refer to the [original repository](https://github.com/savanihd/Laravel-9-CRUD) for the unmodified source and complete documentation.
