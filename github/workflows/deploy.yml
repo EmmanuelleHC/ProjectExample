@@ -1,0 +1,50 @@
+name: Deploy Laravel to DOM Cloud
+
+on:
+  push:
+    branches:
+      - main  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # --- Step 1: Checkout repo dari GitHub ---
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # --- Step 2: Setup PHP environment ---
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, pdo_mysql, intl
+
+      # --- Step 3: Install composer dependencies ---
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      # --- Step 4: Upload semua file ke server DOM Cloud ---
+      - name: Upload project to DOM Cloud
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DOMCLOUD_HOST }}
+          username: ${{ secrets.DOMCLOUD_USER }}
+          key: ${{ secrets.DOMCLOUD_SSH_KEY }}
+          source: "./"
+          target: "/home/${{ secrets.DOMCLOUD_USER }}/"
+
+      # --- Step 5: Jalankan perintah Laravel di server ---
+      - name: Run Laravel setup commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DOMCLOUD_HOST }}
+          username: ${{ secrets.DOMCLOUD_USER }}
+          key: ${{ secrets.DOMCLOUD_SSH_KEY }}
+          script: |
+            cd /home/${{ secrets.DOMCLOUD_USER }}
+            composer install --no-dev --optimize-autoloader
+            php artisan migrate --force
+            php artisan optimize
+            php artisan config:cache
+            php artisan route:cache
