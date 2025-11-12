@@ -23,11 +23,11 @@ jobs:
           strip_components: 0
           overwrite: true
           rm: false
-          exclude: |
-            .git*
-            node_modules
-            storage/logs/*
-            vendor
+          exclude: 
+            [.git*,
+            node_modules,
+            storage/logs/*,
+            vendor]
 
       - name: Run Laravel setup commands via SSH
         uses: appleboy/ssh-action@master
