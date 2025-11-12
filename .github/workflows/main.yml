@@ -1,9 +1,10 @@
-name: Deploy Laravel to DOM Cloud 
+name: Deploy Laravel to DOM Cloud
 
 on:
   push:
     branches:
-      - main 
+      - main  # ubah ke 'master' kalau branch utama kamu itu
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,11 +24,6 @@ jobs:
           strip_components: 0
           overwrite: true
           rm: false
-          exclude: 
-            [.git*,
-            node_modules,
-            storage/logs/*,
-            vendor]
 
       - name: Run Laravel setup commands via SSH
         uses: appleboy/ssh-action@master
