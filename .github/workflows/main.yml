@@ -3,8 +3,7 @@ name: Deploy Laravel to DOM Cloud
 on:
   push:
     branches:
-      - main  # ubah ke 'master' kalau branch utama kamu itu
-
+      - main 
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,11 +15,11 @@ jobs:
       - name: Upload Laravel project to DOM Cloud
         uses: appleboy/scp-action@master
         with:
-          host: osk.domcloud.co
-          username: ecommerce-drawing
+          host: ${{ secrets.DOMCLOUD_HOST }}
+          username: ${{ secrets.DOMCLOUD_USER }}
           password: ${{ secrets.DOMCLOUD_PASS }}
           source: "."
-          target: "/home/ecommerce-drawing/public_html"
+          target: "/home/${{ secrets.DOMCLOUD_USER }}/public_html"
           strip_components: 0
           overwrite: true
           rm: false
@@ -28,8 +27,8 @@ jobs:
       - name: Run Laravel setup commands via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: osk.domcloud.co
-          username: ecommerce-drawing
+          host: ${{ secrets.DOMCLOUD_HOST }}
+          username: ${{ secrets.DOMCLOUD_USER }}
           password: ${{ secrets.DOMCLOUD_PASS }}
           script: |
             cd public_html
@@ -39,4 +38,4 @@ jobs:
             php artisan route:cache
             php artisan view:cache
             php artisan storage:link
-            echo "✅ Deployment success to DOM Cloud!"
+            echo " Deployment success to DOM Cloud!"
