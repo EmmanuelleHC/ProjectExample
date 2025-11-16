@@ -17,25 +17,30 @@ use App\Http\Controllers\TransactionController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// PUBLIC
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
-Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
-Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::resource('products', ProductController::class);
+// ADMIN ONLY
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('products', ProductController::class);
+});
 
-Route::get('cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('cart', [CartController::class, 'store'])->name('cart.store');
-Route::patch('cart/{id}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+//BOTH ADMIN AND CLIENT
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+});
 
-Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
-Route::get('transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
-Route::get('checkout', [TransactionController::class, 'checkout'])->name('transactions.checkout');
-Route::post('checkout', [TransactionController::class, 'processCheckout'])->name('transactions.processCheckout');
 
-Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');
-Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
-Route::get('/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+// CLIENT ONLY
+Route::middleware(['auth', 'client'])->group(function () {
+    Route::resource('cart', CartController::class);
+
+    Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('checkout', [TransactionController::class, 'checkout'])->name('transactions.checkout');
+    Route::post('checkout', [TransactionController::class, 'processCheckout'])->name('transactions.processCheckout');
+    Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');
+});

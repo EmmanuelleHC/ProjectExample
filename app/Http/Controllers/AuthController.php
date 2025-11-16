@@ -78,8 +78,12 @@ class AuthController extends Controller
         if (Auth::check()) {
             $products = Product::where('stock', '>', 0)->get();
     
-            return view('dashboard', compact('products'));
+            return view('dashboard', [
+                'products' => $products,
+                'role' => auth()->user()->role
+            ]);
         }
+
     
         return redirect()->route('login')->with('error', 'Oops! You do not have access.');
     }

@@ -36,6 +36,10 @@ This version has been modified for educational and non-commercial purposes only.
 * Added GitHub Actions for CI/CD automation.
 * Configured deployment to a free domain (DOM Cloud).
 
+### 16 November 2025
+
+* Added Middleware (client and admin) .
+
 
 
 ## ⚠️ Disclaimer
