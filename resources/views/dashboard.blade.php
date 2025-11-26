@@ -26,10 +26,21 @@
         <div class="card h-100">
 
           @if($product->image)
-            <img src="{{ asset('storage/'.$product->image) }}" 
-                 class="card-img-top" 
-                 alt="{{ $product->name }}">
+              @php
+                  $image = $product->image;
+
+                  if (filter_var($image, FILTER_VALIDATE_URL)) {
+                      $src = $image;
+                  } else {
+                      $src = asset('storage/' . $image);
+                  }
+              @endphp
+
+              <img src="{{ $src }}" 
+                  class="card-img-top" 
+                  alt="{{ $product->name }}">
           @endif
+
 
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ $product->name }}</h5>

@@ -39,6 +39,9 @@ This version has been modified for educational and non-commercial purposes only.
 ### 16 November 2025
 
 * Added Middleware (client and admin) .
+### 26 November 2025
+
+* Add Seeder .
 
 
 
